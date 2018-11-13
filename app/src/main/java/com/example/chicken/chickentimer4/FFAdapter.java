@@ -76,14 +76,14 @@ public class FFAdapter extends ArrayAdapter<FF> {
                     @Override
                     public void run() {
                         //Log.i("TimerTaskRun", "Run");
-                        for(int i = 0 ; i < ff.getTime().size() ; i++){
-                            if(ff.getTime().get(i) == ff.getTime_p().get(i)){
+                        for (int i = 0; i < ff.getTime().size(); i++) {
+                            if (ff.getTime().get(i) == ff.getTime_p().get(i)) {
                                 count[0]++;
                             }
                         }
-                        if(chkTimer[0]) {
+                        if (chkTimer[0]) {
                             Log.i("TIMERRUNFORFUNCTION", String.valueOf(count[0]));
-                            if(count[0] < ff.getTime().size()) {
+                            if (count[0] < ff.getTime().size()) {
                                 timerStart(ff, count[0], progressBarArrayList[count[0]]);
                                 chkTimer[0] = false;
                                 count[0]++;
@@ -95,10 +95,11 @@ public class FFAdapter extends ArrayAdapter<FF> {
                 };
                 Timer timer = new Timer();
                 timer.schedule(tt, 0, 1000 * num);
-        }
+            }
         });
         return v;
     }
+
     private void timerStart(final FF ff, final int index, final ProgressBar time) {
         while (true) {
             try {
