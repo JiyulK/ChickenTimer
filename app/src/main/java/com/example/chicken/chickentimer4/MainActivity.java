@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
     Spinner spinner2; // ff 제품을 선택하는 스피너
     HashMap<String, HashMap<String, ArrayList<Integer>>> c; // ff 제품에 대한 정보를 저장하고 있는 변수
 
-
     ListView listView; // 타이머를 표시해줄 리스트뷰
     static ArrayList<FF> registedList; // 현재 등록된 타이머 정보들
     ArrayList<FF> queue;
@@ -48,7 +47,11 @@ public class MainActivity extends AppCompatActivity {
 
         data_init();
         view_init();
-        setMax(); // 타이머 최대치 설정
+        while (true) {
+            setMax(); // 타이머 최대치 설정
+            if (String.valueOf(MAX) != null)
+                break;
+        }
     }
 
     private void setMax() {
@@ -99,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Log.i("test", c.get("미니스톱").keySet().toArray().length + "");
     }
+
     private void view_init() {
         // 레이아웃 연결해주기
         times = new ArrayList<>(); // 전자레인지, 튀김기 시간
@@ -159,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
     public void onButton1Clicked(View view) {
 //        times[0] = c.get(conName).get(FFName)[0];
 //        times[1] = c.get(conName).get(FFName)[1];
