@@ -47,11 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         data_init();
         view_init();
-        while (true) {
-            setMax(); // 타이머 최대치 설정
-            if (String.valueOf(MAX) != null)
-                break;
-        }
+        setMax(); // 타이머 최대치 설정
     }
 
     private void setMax() {
