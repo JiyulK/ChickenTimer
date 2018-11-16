@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     HashMap<String, HashMap<String, ArrayList<Integer>>> c; // ff 제품에 대한 정보를 저장하고 있는 변수
 
 
-    ListView listView; // 타이머를 표시해줄 리스트뷰
+    static ListView listView; // 타이머를 표시해줄 리스트뷰
     static ArrayList<FF> registedList; // 현재 등록된 타이머 정보들
     ArrayList<FF> queue;
     String conName; // 타이머 등록시 FF클래스 객체 생성자에 넘겨줄 편의점 이름 변수

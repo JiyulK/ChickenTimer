@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 import java.util.Timer;
@@ -24,10 +25,14 @@ public class FFAdapter extends ArrayAdapter<FF> {
     Button stopbtn;
     int num = 1;
 
+  //  ArrayList<Timer> timer;
+
     public FFAdapter(Context context, int resource, List<FF> objects) {
         super(context, resource, objects);
         this.context = context;
         this.mFF = objects;
+
+ //       timer = new ArrayList<>();
     }
 
     @Override
@@ -62,6 +67,33 @@ public class FFAdapter extends ArrayAdapter<FF> {
             public void onClick(View view) {
                 registedList.remove(position);
                 arrayAdapter.notifyDataSetChanged();
+                for(int i = 0 ; i < mFF.size() ; i++){
+                    int count = 0;
+                    if(mFF.get(i).isActive) {
+                        Toast.makeText(getContext(), "ACTIVE", Toast.LENGTH_SHORT).show();
+                        Log.i(" ACTIVE", "ACTIVE");
+                        for (int j = 0; j < mFF.get(i).getTime().size(); j++) {
+                            if (mFF.get(i).getTime().get(j) == mFF.get(i).getTime_p().get(j)) {
+                                count++;
+                            }
+                        }
+                        timerStart(mFF.get(i), count, progressBarArrayList[i]);
+                    }else{
+                        Toast.makeText(getContext(), "NOT ACTIVE", Toast.LENGTH_SHORT).show();
+                        Log.i("NOT ACTIVE", "NOT");
+                        for(int j = 0 ; j < mFF.get(i).getTime().size() ; j++){
+                            final int finalJ = j;
+                            final int finalI = i;
+                            ((MainActivity) context).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressBarArrayList[finalJ].setProgress(100 / mFF.get(finalI).getTime().get(finalJ) * ff.getTime_p().get(finalJ));
+                                }
+                            });
+                            //progressBarArrayList[j].setProgress(100 / mFF.get(i).getTime().get(j) * mFF.get(i).getTime_p().get(j));
+                        }
+                    }
+                }
             }
         });
         stbtn = v.findViewById(R.id.startBtn);
@@ -76,14 +108,14 @@ public class FFAdapter extends ArrayAdapter<FF> {
                     @Override
                     public void run() {
                         //Log.i("TimerTaskRun", "Run");
-                        for(int i = 0 ; i < ff.getTime().size() ; i++){
-                            if(ff.getTime().get(i) == ff.getTime_p().get(i)){
+                        for (int i = 0; i < ff.getTime().size(); i++) {
+                            if (ff.getTime().get(i) == ff.getTime_p().get(i)) {
                                 count[0]++;
                             }
                         }
-                        if(chkTimer[0]) {
+                        if (chkTimer[0]) {
                             Log.i("TIMERRUNFORFUNCTION", String.valueOf(count[0]));
-                            if(count[0] < ff.getTime().size()) {
+                            if (count[0] < ff.getTime().size()) {
                                 timerStart(ff, count[0], progressBarArrayList[count[0]]);
                                 chkTimer[0] = false;
                                 count[0]++;
@@ -93,12 +125,16 @@ public class FFAdapter extends ArrayAdapter<FF> {
                         //fTime.setProgress(100 / ff.getTime().get(1) * ff.getTime_p().get(1));
                     }
                 };
+
+//                timer.add(new Timer());
+//                timer.get(timer.size() - 1).schedule(tt, 0, 1000 * num);
                 Timer timer = new Timer();
                 timer.schedule(tt, 0, 1000 * num);
-        }
+            }
         });
         return v;
     }
+
     private void timerStart(final FF ff, final int index, final ProgressBar time) {
         while (true) {
             try {
