@@ -9,12 +9,15 @@
         android:id="@+id/Fname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="점보통다라" />
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:text="점보통다리" />
 
     <ProgressBar
         android:id="@+id/Mtime"
         style="@android:style/Widget.ProgressBar.Horizontal"
-        android:layout_width="50pt"
+        android:layout_width="0dp"
+        android:layout_weight="3"
         android:layout_height="wrap_content"
         android:layout_marginRight="3dp"
         android:max="100" />
@@ -22,13 +25,15 @@
     <ProgressBar
         android:id="@+id/Ftime"
         style="@android:style/Widget.ProgressBar.Horizontal"
-        android:layout_width="50pt"
+        android:layout_width="0dp"
+        android:layout_weight="3"
         android:layout_height="wrap_content"
         android:max="100" />
 
     <Button
         android:id="@+id/startBtn"
-        android:layout_width="30dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="30dp"
         android:layout_margin="0dp"
         android:padding="0dp"
@@ -37,7 +42,8 @@
 
     <Button
         android:id="@+id/stopBtn"
-        android:layout_width="30dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="30dp"
         android:layout_margin="0dp"
         android:padding="0dp"

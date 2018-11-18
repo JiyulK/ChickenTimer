@@ -25,18 +25,19 @@ public class FFAdapter extends ArrayAdapter<FF> {
     Button stopbtn;
     int num = 1;
 
-  //  ArrayList<Timer> timer;
+    //  ArrayList<Timer> timer;
 
     public FFAdapter(Context context, int resource, List<FF> objects) {
         super(context, resource, objects);
         this.context = context;
         this.mFF = objects;
 
- //       timer = new ArrayList<>();
+        //       timer = new ArrayList<>();
     }
 
     @Override
     public View getView(final int position, final View convertView, ViewGroup parent) {
+
         View v = convertView;
 
         if (v == null) {
@@ -65,35 +66,56 @@ public class FFAdapter extends ArrayAdapter<FF> {
         stopbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //   registedList.get(position).setActive(false);
                 registedList.remove(position);
                 arrayAdapter.notifyDataSetChanged();
-                for(int i = 0 ; i < mFF.size() ; i++){
+                for (int i = position; i < registedList.size(); i++) {
                     int count = 0;
-                    if(mFF.get(i).isActive) {
+                    boolean chk = registedList.get(i).isActive;
+                    if (chk) {
                         Toast.makeText(getContext(), "ACTIVE", Toast.LENGTH_SHORT).show();
                         Log.i(" ACTIVE", "ACTIVE");
-                        for (int j = 0; j < mFF.get(i).getTime().size(); j++) {
-                            if (mFF.get(i).getTime().get(j) == mFF.get(i).getTime_p().get(j)) {
+                        for (int j = 0; j < registedList.get(i).getTime().size(); j++) {
+                            if (registedList.get(i).getTime().get(j) == registedList.get(i).getTime_p().get(j)) {
                                 count++;
                             }
-                        }
-                        timerStart(mFF.get(i), count, progressBarArrayList[i]);
-                    }else{
-                        Toast.makeText(getContext(), "NOT ACTIVE", Toast.LENGTH_SHORT).show();
-                        Log.i("NOT ACTIVE", "NOT");
-                        for(int j = 0 ; j < mFF.get(i).getTime().size() ; j++){
                             final int finalJ = j;
                             final int finalI = i;
                             ((MainActivity) context).runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    progressBarArrayList[finalJ].setProgress(100 / mFF.get(finalI).getTime().get(finalJ) * ff.getTime_p().get(finalJ));
+                                    progressBarArrayList[finalJ].setProgress(100 / registedList.get(finalI).getTime().get(finalJ) * registedList.get(finalI).getTime_p().get(finalJ));
+                                }
+                            });
+                        }
+                        final int finalI1 = i;
+                        final int finalCount = count;
+                        TimerTask tt = new TimerTask() {
+                            @Override
+                            public void run() {
+                                timerStart(finalI1, finalCount, progressBarArrayList);
+                            }
+                        };
+                        Timer timer = new Timer();
+                        timer.schedule(tt, 0);
+                    } else {
+                        Toast.makeText(getContext(), "NOT ACTIVE", Toast.LENGTH_SHORT).show();
+                        Log.i("POSITION", "position" + position);
+                        Log.i("NOT ACTIVE", "NOT");
+                        for (int j = 0; j < registedList.get(i).getTime().size(); j++) {
+                            final int finalJ = j;
+                            final int finalI = i;
+                            ((MainActivity) context).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    progressBarArrayList[finalJ].setProgress(100 / registedList.get(finalI).getTime().get(finalJ) * registedList.get(finalI).getTime_p().get(finalJ));
                                 }
                             });
                             //progressBarArrayList[j].setProgress(100 / mFF.get(i).getTime().get(j) * mFF.get(i).getTime_p().get(j));
                         }
                     }
                 }
+                arrayAdapter.notifyDataSetChanged();
             }
         });
         stbtn = v.findViewById(R.id.startBtn);
@@ -101,6 +123,8 @@ public class FFAdapter extends ArrayAdapter<FF> {
             @Override
             public void onClick(View view) {
                 //Toast.makeText(getContext(), "clicked", Toast.LENGTH_SHORT).show();
+//                Log.i("POSITION VALUE", String.valueOf(position) );
+                //Toast.makeText(getContext(), "POSITION : "+ position, Toast.LENGTH_SHORT).show();
                 final boolean[] chkTimer = new boolean[1];
                 chkTimer[0] = true;
                 final int[] count = {0};
@@ -116,7 +140,8 @@ public class FFAdapter extends ArrayAdapter<FF> {
                         if (chkTimer[0]) {
                             Log.i("TIMERRUNFORFUNCTION", String.valueOf(count[0]));
                             if (count[0] < ff.getTime().size()) {
-                                timerStart(ff, count[0], progressBarArrayList[count[0]]);
+                                //timerStart(mFF.get(position) , count[0], progressBarArrayList[count[0]]);
+                                timerStart(position, count[0], progressBarArrayList);
                                 chkTimer[0] = false;
                                 count[0]++;
                             }
@@ -129,29 +154,52 @@ public class FFAdapter extends ArrayAdapter<FF> {
 //                timer.add(new Timer());
 //                timer.get(timer.size() - 1).schedule(tt, 0, 1000 * num);
                 Timer timer = new Timer();
-                timer.schedule(tt, 0, 1000 * num);
+                timer.schedule(tt, 0);
             }
         });
         return v;
     }
 
-    private void timerStart(final FF ff, final int index, final ProgressBar time) {
+    private void timerStart(final int position, final int index, final ProgressBar[] time) {
+        //Toast.makeText(getContext(), "POSITION : "+ position, Toast.LENGTH_SHORT).show();
+        //변수로 받아와. 이름을
+        String name;
+        name = registedList.get(position).getName();//옛날 이름
+        Log.i("POSITION", "position" + position);
         while (true) {
             try {
                 Thread.sleep(1000);
-                Log.i("TimerTaskRun", "Run");
-                ff.getTime_p().set(index, ff.getTime_p().get(index) + 1);
-                ((MainActivity) context).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.i("left", String.valueOf(ff.getTime().get(index)));
-                        Log.i("right", String.valueOf(ff.getTime_p().get(index)));
-                        time.setProgress(100 / ff.getTime().get(index) * ff.getTime_p().get(index));
-                    }
-                });
-                if (ff.getTime().get(index) == ff.getTime_p().get(index)) {
+                registedList.get(position).setActive(true);
+                //이 포지션에 해당하는 이름이랑, 내가 옛날에 받아온 이름이랑 같은지 매번 체크
+                String now;
+                now = registedList.get(position).getName();
+                Log.i("menuname1", name + " " + position);
+                Log.i("menuname2", now + " " + position);
+                if (name == now) {
+                    registedList.get(position).getTime_p().set(index, registedList.get(position).getTime_p().get(index) + 1);
+                    ((MainActivity) context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //Log.i("left", String.valueOf(registedList.get(position).getTime().get(index)));
+                            //Log.i("right", String.valueOf(registedList.get(position).getTime_p().get(index)));
+                            time[index].setProgress(100 / registedList.get(position).getTime().get(index) * registedList.get(position).getTime_p().get(index));
+                            Log.i("checktimer", String.valueOf(time[index].getProgress() + "번호" + index));
+                        }
+                    });
+                } else {//같지 않다면, 이것은 삭제된것이다. 그니깐 이 행동을 종료해야돼
+                    Log.i("POSITION DIE", "DIE");
+                    break;
+                }
+                boolean chk = registedList.get(position).isActive;
+                if (chk) {
+                    Log.i("TimerTaskRun", "OK");
+                } else {
+                    Log.i("TimerTaskRun", "OMG");
+                    break;
+                }
+                if (registedList.get(position).getTime().get(index) == registedList.get(position).getTime_p().get(index)) {
                     Log.i("BREAK POINT", "HERE");
-                    ff.setActive(false);
+                    registedList.get(position).setActive(false);
                     break;
                 }
             } catch (Exception e) {

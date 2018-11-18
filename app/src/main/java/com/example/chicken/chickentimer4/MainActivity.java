@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     static ListView listView; // 타이머를 표시해줄 리스트뷰
+    // 타이머를 표시해줄 리스트뷰
     static ArrayList<FF> registedList; // 현재 등록된 타이머 정보들
     ArrayList<FF> queue;
     String conName; // 타이머 등록시 FF클래스 객체 생성자에 넘겨줄 편의점 이름 변수
@@ -46,25 +47,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // 레이아웃 연결해주기
-        times = new ArrayList<>(); // 전자레인지, 튀김기 시간
-        spinner1 = findViewById(R.id.spinner1);
-        spinner2 = findViewById(R.id.spinner2);
-        listView = findViewById(R.id.ListView1);
-        registedList = new ArrayList<FF>();
-        arrayAdapter = new FFAdapter(this, R.layout.row, registedList);
-        listView.setAdapter(arrayAdapter);
-
-        // 대기큐 설정
-        queue = new ArrayList<>();
-        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(layoutManager);
-        queueadapter = new QueueAdapter(queue);
-        recyclerView.setAdapter(queueadapter);
-
-
-        init();
+        data_init();
+        view_init();
         setMax(); // 타이머 최대치 설정
     }
 
@@ -85,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void init() {
+    private void data_init() {
 
         c = new HashMap<>();
         c.put("미니스톱", new HashMap<String, ArrayList<Integer>>());
@@ -115,10 +99,29 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Log.i("test", c.get("미니스톱").keySet().toArray().length + "");
+    }
 
+    private void view_init() {
+        // 레이아웃 연결해주기
+        times = new ArrayList<>(); // 전자레인지, 튀김기 시간
+        spinner1 = findViewById(R.id.spinner1);
+        spinner2 = findViewById(R.id.spinner2);
+        listView = findViewById(R.id.ListView1);
+        registedList = new ArrayList<FF>();
+        arrayAdapter = new FFAdapter(this, R.layout.row, registedList);
+        listView.setAdapter(arrayAdapter);
+
+        // 대기큐 설정
+        queue = new ArrayList<>();
+        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(layoutManager);
+        queueadapter = new QueueAdapter(queue);
+        recyclerView.setAdapter(queueadapter);
+
+        // 스피너 연결해주기
         ArrayAdapter arrayAdapter1 = new ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, c.keySet().toArray());
         spinner1.setAdapter(arrayAdapter1);
-
         spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
