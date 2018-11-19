@@ -9,7 +9,7 @@ public class FF {
     ArrayList<Integer> time;
     ArrayList<Integer> time_p;
     boolean isActive; // 현재 타이머가 동작하고 있는지 알려주는 변수
-    public MediaPlayer mediaPlayer;
+    public MediaPlayer mediaPlayer; // 알람음을 울리게 해주는 필드
 
     public FF(String name, ArrayList<Integer> time, ArrayList<Integer> time_p, boolean isActive) {
         this.name = name;

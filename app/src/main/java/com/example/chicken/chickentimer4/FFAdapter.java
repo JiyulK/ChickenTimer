@@ -33,7 +33,7 @@ public class FFAdapter extends ArrayAdapter<FF> {
         this.context = context;
         this.mFF = objects;
 
-        //       timer = new ArrayList<>();
+        //  timer = new ArrayList<>();
     }
 
     @Override
@@ -47,10 +47,7 @@ public class FFAdapter extends ArrayAdapter<FF> {
         }
         final FF ff = mFF.get(position);
         // 알람음 초기화
-        if (registedList.get(position).mediaPlayer == null) {
-            registedList.get(position).mediaPlayer = MediaPlayer.create(getContext(), R.raw.alertsound);
-            registedList.get(position).mediaPlayer.setLooping(true); // 반복재생 설정
-        }
+        initAlarm(position);
 
         final ProgressBar mTime;
         final ProgressBar fTime;
@@ -73,9 +70,7 @@ public class FFAdapter extends ArrayAdapter<FF> {
             @Override
             public void onClick(View view) {
                 // 알람 종료
-                if (registedList.get(position).mediaPlayer.isPlaying()) {
-                    registedList.get(position).mediaPlayer.pause();
-                }
+                stopAlarm(position);
 
                 //   registedList.get(position).setActive(false);
                 registedList.remove(position);
@@ -134,9 +129,7 @@ public class FFAdapter extends ArrayAdapter<FF> {
             @Override
             public void onClick(View view) {
                 // 알람 종료
-                if (registedList.get(position).mediaPlayer.isPlaying()) {
-                    registedList.get(position).mediaPlayer.pause();
-                }
+                stopAlarm(position);
 
 
                 //Toast.makeText(getContext(), "clicked", Toast.LENGTH_SHORT).show();
@@ -212,9 +205,7 @@ public class FFAdapter extends ArrayAdapter<FF> {
                     Log.i("POSITION DIE", "DIE");
 
                     // 알람 종료
-                    if (registedList.get(position).mediaPlayer.isPlaying()) {
-                        registedList.get(position).mediaPlayer.pause();
-                    }
+                    stopAlarm(position);
                     break;
                 }
                 boolean chk = registedList.get(position).isActive;
@@ -229,9 +220,7 @@ public class FFAdapter extends ArrayAdapter<FF> {
                     registedList.get(position).setActive(false);
 
                     // 알람 시작
-                    if (!registedList.get(position).mediaPlayer.isPlaying()) {
-                        registedList.get(position).mediaPlayer.start();
-                    }
+                    startAlarm(position);
                     break;
                 }
             } catch (Exception e) {
@@ -239,4 +228,24 @@ public class FFAdapter extends ArrayAdapter<FF> {
             }
         }
     }
+
+    private void initAlarm(int position) {
+        if (registedList.get(position).mediaPlayer == null) {
+            registedList.get(position).mediaPlayer = MediaPlayer.create(getContext(), R.raw.alertsound);
+            registedList.get(position).mediaPlayer.setLooping(true); // 반복재생 설정
+        }
+    }
+
+    private void stopAlarm(int position) {
+        if (registedList.get(position).mediaPlayer.isPlaying()) {
+            registedList.get(position).mediaPlayer.pause();
+        }
+    }
+
+    private void startAlarm(int position) {
+        if (!registedList.get(position).mediaPlayer.isPlaying()) {
+            registedList.get(position).mediaPlayer.start();
+        }
+    }
+
 }
