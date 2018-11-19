@@ -1,6 +1,7 @@
 package com.example.chicken.chickentimer4;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +46,11 @@ public class FFAdapter extends ArrayAdapter<FF> {
             v = vi.inflate(R.layout.row, null);
         }
         final FF ff = mFF.get(position);
+        // 알람음 초기화
+        if (registedList.get(position).mediaPlayer == null) {
+            registedList.get(position).mediaPlayer = MediaPlayer.create(getContext(), R.raw.alertsound);
+            registedList.get(position).mediaPlayer.setLooping(true); // 반복재생 설정
+        }
 
         final ProgressBar mTime;
         final ProgressBar fTime;
@@ -66,6 +72,11 @@ public class FFAdapter extends ArrayAdapter<FF> {
         stopbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 알람 종료
+                if (registedList.get(position).mediaPlayer.isPlaying()) {
+                    registedList.get(position).mediaPlayer.pause();
+                }
+
                 //   registedList.get(position).setActive(false);
                 registedList.remove(position);
                 arrayAdapter.notifyDataSetChanged();
@@ -122,6 +133,12 @@ public class FFAdapter extends ArrayAdapter<FF> {
         stbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 알람 종료
+                if (registedList.get(position).mediaPlayer.isPlaying()) {
+                    registedList.get(position).mediaPlayer.pause();
+                }
+
+
                 //Toast.makeText(getContext(), "clicked", Toast.LENGTH_SHORT).show();
 //                Log.i("POSITION VALUE", String.valueOf(position) );
                 //Toast.makeText(getContext(), "POSITION : "+ position, Toast.LENGTH_SHORT).show();
@@ -165,6 +182,11 @@ public class FFAdapter extends ArrayAdapter<FF> {
         //변수로 받아와. 이름을
         String name;
         name = registedList.get(position).getName();//옛날 이름
+
+        // 알람 설정
+//        MediaPlayer mediaPlayer = MediaPlayer.create(getContext(), R.raw.alertsound);
+//        mediaPlayer.setLooping(true);
+
         Log.i("POSITION", "position" + position);
         while (true) {
             try {
@@ -188,6 +210,11 @@ public class FFAdapter extends ArrayAdapter<FF> {
                     });
                 } else {//같지 않다면, 이것은 삭제된것이다. 그니깐 이 행동을 종료해야돼
                     Log.i("POSITION DIE", "DIE");
+
+                    // 알람 종료
+                    if (registedList.get(position).mediaPlayer.isPlaying()) {
+                        registedList.get(position).mediaPlayer.pause();
+                    }
                     break;
                 }
                 boolean chk = registedList.get(position).isActive;
@@ -200,6 +227,11 @@ public class FFAdapter extends ArrayAdapter<FF> {
                 if (registedList.get(position).getTime().get(index) == registedList.get(position).getTime_p().get(index)) {
                     Log.i("BREAK POINT", "HERE");
                     registedList.get(position).setActive(false);
+
+                    // 알람 시작
+                    if (!registedList.get(position).mediaPlayer.isPlaying()) {
+                        registedList.get(position).mediaPlayer.start();
+                    }
                     break;
                 }
             } catch (Exception e) {
