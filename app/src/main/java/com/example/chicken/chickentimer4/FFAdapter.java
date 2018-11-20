@@ -90,7 +90,7 @@ public class FFAdapter extends ArrayAdapter<FF> {
                             ((MainActivity) context).runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    progressBarArrayList[finalJ].setProgress(100 / registedList.get(finalI).getTime().get(finalJ) * registedList.get(finalI).getTime_p().get(finalJ));
+                                    //progressBarArrayList[finalJ].setProgress(100 / registedList.get(finalI).getTime().get(finalJ) * registedList.get(finalI).getTime_p().get(finalJ));
                                 }
                             });
                         }
@@ -115,7 +115,7 @@ public class FFAdapter extends ArrayAdapter<FF> {
                                 @Override
                                 public void run() {
                                     Log.i("asdf", String.valueOf(registedList.get(finalI).getTime().get(finalJ) * registedList.get(finalI).getTime_p().get(finalJ)));
-                                    progressBarArrayList[finalJ].setProgress(100 / registedList.get(finalI).getTime().get(finalJ) * registedList.get(finalI).getTime_p().get(finalJ));
+                                    //progressBarArrayList[finalJ].setProgress(100 / registedList.get(finalI).getTime().get(finalJ) * registedList.get(finalI).getTime_p().get(finalJ));
                                 }
                             });
                             //progressBarArrayList[j].setProgress(100 / mFF.get(i).getTime().get(j) * mFF.get(i).getTime_p().get(j));
@@ -206,17 +206,20 @@ public class FFAdapter extends ArrayAdapter<FF> {
                     });
                 } else {//같지 않다면, 이것은 삭제된것이다. 그니깐 이 행동을 종료해야돼
                     Log.i("POSITION DIE", "DIE");
-                    if(registedList.get(position+1) != null) {
-                        for (int i = 0; i < registedList.get(position).getTime().size(); i++) {
-                            final int finalI = i;
-                            ((MainActivity) context).runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    time[finalI].setProgress(100 / registedList.get(position+1).getTime().get(index) * registedList.get(position+1).getTime_p().get(index));
-                                }
-                            });
-                        }
-                    }
+//                    for(int j = position ; j < registedList.size() ; j++) {
+//                        if (registedList.get(j + 1) != null) {
+//                            for (int i = 0; i < registedList.get(j + 1).getTime().size(); i++) {
+//                                final int finalI = i;
+//                                final int finalJ = j;
+//                                ((MainActivity) context).runOnUiThread(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        registedList.get(finalJ).getTime().set(finalI, registedList.get(finalJ + 1).getTime().get(finalI));
+//                                    }
+//                                });
+//                            }
+//                        }
+//                    }
                     // 알람 종료
                     stopAlarm(position);
                     break;
